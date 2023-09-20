@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instagram Reels Downloader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Instagram Reels Downloader</h1>
+    <form method="POST" action="/download">
+        <input type="text" name="url" placeholder="Enter Instagram Reels URL" />
+        <button type="submit">Download</button>
+    </form>
+</body>
+</html>
