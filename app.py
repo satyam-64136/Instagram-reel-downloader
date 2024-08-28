@@ -1,7 +1,7 @@
-from flask import Flask, request, render_template, send_file, Response
+from flask import Flask, request, render_template, send_file
 import instaloader
-import os
 import requests
+import io
 
 app = Flask(__name__)
 
@@ -14,34 +14,28 @@ def download_reels():
     url = request.form.get('url')
     if url:
         try:
-            # Create an Instaloader instance
             loader = instaloader.Instaloader()
+            shortcode = url.split('/')[-2]
+            post = instaloader.Post.from_shortcode(loader.context, shortcode)
 
-            # Download the post
-            post = instaloader.Post.from_shortcode(loader.context, url.split('/')[-2])
-
-            # Check if the post is a video
             if post.is_video:
                 video_url = post.video_url
-                response = requests.get(video_url)
+                video_data = requests.get(video_url).content
 
-                if response.status_code == 200:
-                    # Define the filename for the downloaded video
-                    filename = f"{post.owner_username}_{post.date_utc.strftime('%Y%m%d%H%M%S')}.mp4"
-
-                    # Set the appropriate content headers for the response
-                    headers = {
-                        'Content-Disposition': f'attachment; filename={filename}',
-                        'Content-Type': 'video/mp4',
-                    }
-
-                    # Return the file as a response with headers
-                    return Response(response.content, headers=headers)
-                else:
-                    return "Video download failed."
+                filename = f"{post.owner_username}_{post.date_utc.strftime('%Y%m%d%H%M%S')}.mp4"
+                
+                return send_file(
+                    io.BytesIO(video_data),
+                    mimetype='video/mp4',
+                    as_attachment=True,
+                    download_name=filename
+                )
             else:
                 return "The provided URL is not for a video."
+
         except Exception as e:
+            # Logging the exception for debugging
+            print(f"Error: {e}")
             return f"Error: {e}"
 
     return "Please enter a valid Instagram Reels URL."
