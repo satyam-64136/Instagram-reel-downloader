@@ -15,7 +15,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/instagram-reels-downloader.git
+git clone https://github.com/satyam-64136/Instagram-reel-downloader.git
 cd instagram-reels-downloader
 Install the required dependencies:
 
