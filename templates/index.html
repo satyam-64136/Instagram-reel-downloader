@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>Instagram Reels Downloader</h1>
+    <div class="container">
+    <h1>Instagram  Reels  Downloader</h1>
     <form method="POST" action="/download">
-        <input type="text" name="url" placeholder="Enter Instagram Reels URL" />
+        <input type="text" name="url" placeholder="Enter Url here...." />
         <button type="submit">Download</button>
     </form>
-    
+    </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

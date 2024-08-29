@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, send_file
 import instaloader
 import requests
 import io
+import re
 
 app = Flask(__name__)
 
@@ -22,7 +23,12 @@ def download_reels():
                 video_url = post.video_url
                 video_data = requests.get(video_url).content
 
-                filename = f"{post.owner_username}_{post.date_utc.strftime('%Y%m%d%H%M%S')}.mp4"
+                caption = post.caption[:50] if post.caption else "no_caption"
+                caption = re.sub(r'[^\w\s-]', '', caption).strip().replace(' ', '_')
+                if not caption:
+                    caption = "no_caption"
+
+                filename = f"{caption}_{post.owner_username}_{post.date_utc.strftime('%Y%m%d%H%M%S')}.mp4"
                 
                 return send_file(
                     io.BytesIO(video_data),
